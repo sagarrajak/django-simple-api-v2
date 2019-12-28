@@ -1,9 +1,10 @@
 # Create your views here.
 from rest_framework import mixins
-from rest_framework import generics
+from rest_framework import generics, permissions
 
 from snippets.models import Snippet
 from snippets.serializers import SnippetSerializer
+from snippets.permission import  IsOwnerReadOnly
 
 
 class SnippetDetails(mixins.RetrieveModelMixin,
@@ -36,12 +37,17 @@ class SnippetList(mixins.ListModelMixin,
         return self.create(request, *args, **kwargs)
 
 
+
 class SnippetList(generics.ListCreateAPIView):
     """ List or get snippets """
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 class SnippetDetails(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerReadOnly]
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer

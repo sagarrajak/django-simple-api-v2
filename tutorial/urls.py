@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.urls import include, path
 from tutorial.views import UserList, UserDetail
+from django.conf.urls import include
+
 urlpatterns = [
     path('users/', UserList.as_view()),
     path('users/<int:pk>/', UserDetail.as_view()),

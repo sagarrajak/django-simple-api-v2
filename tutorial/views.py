@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import generics
 
 from tutorial.serializers import UserSerializer
+from rest_framework import permissions
 
 
 class UserList(generics.ListAPIView):
